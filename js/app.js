@@ -11,9 +11,28 @@ const App = {
      * Initialize the app data
      */
     init() {
-        this.events = Storage.loadEvents();
-        this.settings = Storage.loadSettings();
+        // Load settings with callback
+        const localSettings = Storage.loadSettings((settings) => {
+            this.settings = settings;
+            this.applyTheme(this.settings.theme);
+            // Re-render UI if it exists
+            if (window.UI) UI.renderDashboard();
+        });
+        this.settings = localSettings;
         this.applyTheme(this.settings.theme);
+
+        // Load events with callback (Realtime)
+        const localEvents = Storage.loadEvents((events) => {
+            this.events = events;
+            // Re-render UI components
+            if (window.UI) {
+                UI.renderDashboard();
+                UI.renderEventsList();
+                UI.renderReminders();
+                UI.updateStats();
+            }
+        });
+        this.events = localEvents;
     },
 
     /**

@@ -100,10 +100,7 @@ const UI = {
         });
 
         // Update stats
-        document.getElementById('statFamily').textContent = family;
-        document.getElementById('statFriends').textContent = friends;
-        document.getElementById('statHolidays').textContent = holidays;
-        document.getElementById('statOthers').textContent = others;
+        this.updateStats();
 
         // Empty states
         if (!hasToday) {
@@ -126,6 +123,30 @@ const UI = {
 
         // Setup delete buttons
         this.setupDeleteButtons();
+    },
+
+    /**
+     * Update stats cards
+     */
+    updateStats() {
+        let family = 0, friends = 0, holidays = 0, others = 0;
+        
+        App.events.forEach(event => {
+            if (event.category === 'family') family++;
+            else if (event.category === 'friend') friends++;
+            else if (event.type === 'holiday') holidays++;
+            else others++;
+        });
+
+        const elFamily = document.getElementById('statFamily');
+        const elFriends = document.getElementById('statFriends');
+        const elHolidays = document.getElementById('statHolidays');
+        const elOthers = document.getElementById('statOthers');
+
+        if (elFamily) elFamily.textContent = family;
+        if (elFriends) elFriends.textContent = friends;
+        if (elHolidays) elHolidays.textContent = holidays;
+        if (elOthers) elOthers.textContent = others;
     },
 
     /**
