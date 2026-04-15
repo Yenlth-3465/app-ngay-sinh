@@ -26,14 +26,27 @@ const STORAGE_KEYS = {
 
 const Storage = {
     /**
+     * Get reference path for a key
+     */
+    getRef(key) {
+        const user = firebase.auth().currentUser;
+        if (!user) return null;
+        return `users/${user.uid}/${key}`;
+    },
+
+    /**
      * Save events to Firebase
      * @param {Array} events 
      */
     saveEvents(events) {
+        const path = this.getRef(STORAGE_KEYS.EVENTS);
+        if (!path) return false;
+
         try {
-            database.ref(STORAGE_KEYS.EVENTS).set(events);
-            // Vẫn lưu backup ở LocalStorage cho chắc chắn
-            localStorage.setItem('kawaii_diary_events', JSON.stringify(events));
+            database.ref(path).set(events);
+            // Vẫn lưu backup ở LocalStorage cho chắc chắn (theo UID để tránh lẫn lộn)
+            const user = firebase.auth().currentUser;
+            localStorage.setItem(`kawaii_diary_events_${user.uid}`, JSON.stringify(events));
             return true;
         } catch (e) {
             console.error('Error saving events to Firebase:', e);
@@ -46,15 +59,19 @@ const Storage = {
      * @param {Function} callback - Hàm xử lý khi có dữ liệu trả về
      */
     loadEvents(callback) {
+        const path = this.getRef(STORAGE_KEYS.EVENTS);
+        if (!path) return [];
+
         // Lắng nghe thay đổi realtime
-        database.ref(STORAGE_KEYS.EVENTS).on('value', (snapshot) => {
+        database.ref(path).on('value', (snapshot) => {
             const data = snapshot.val();
             const events = data || [];
             if (callback) callback(events);
         });
         
-        // Trả về dữ liệu từ local storage ngay lập tức để app ko bị trống trong lúc chờ network
-        const localEvents = localStorage.getItem('kawaii_diary_events');
+        // Trả về dữ liệu từ local storage ngay lập tức
+        const user = firebase.auth().currentUser;
+        const localEvents = localStorage.getItem(`kawaii_diary_events_${user.uid}`);
         return localEvents ? JSON.parse(localEvents) : [];
     },
 
@@ -63,7 +80,8 @@ const Storage = {
      * @param {Object} settings 
      */
     saveSettings(settings) {
-        database.ref(STORAGE_KEYS.SETTINGS).set(settings);
+        const path = this.getRef(STORAGE_KEYS.SETTINGS);
+        if (path) database.ref(path).set(settings);
     },
 
     /**
@@ -71,7 +89,10 @@ const Storage = {
      * @param {Function} callback 
      */
     loadSettings(callback) {
-        database.ref(STORAGE_KEYS.SETTINGS).on('value', (snapshot) => {
+        const path = this.getRef(STORAGE_KEYS.SETTINGS);
+        if (!path) return { theme: 'sakura', defaultReminder: 2 };
+
+        database.ref(path).on('value', (snapshot) => {
             const data = snapshot.val();
             const defaultSettings = {
                 theme: 'sakura',
@@ -82,7 +103,8 @@ const Storage = {
             if (callback) callback(settings);
         });
         
-        const settings = localStorage.getItem('kawaii_diary_settings');
+        const user = firebase.auth().currentUser;
+        const settings = localStorage.getItem(`kawaii_diary_settings_${user.uid}`);
         return settings ? JSON.parse(settings) : { theme: 'sakura', defaultReminder: 2 };
     },
 
@@ -90,7 +112,10 @@ const Storage = {
      * Export data (Giữ nguyên tính năng cũ)
      */
     exportData() {
-        const localEvents = localStorage.getItem('kawaii_diary_events');
+        const user = firebase.auth().currentUser;
+        if (!user) return;
+        
+        const localEvents = localStorage.getItem(`kawaii_diary_events_${user.uid}`);
         const data = {
             events: localEvents ? JSON.parse(localEvents) : [],
             settings: { theme: 'sakura' }, // placeholder
@@ -100,7 +125,7 @@ const Storage = {
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;
-        a.download = `kawaii_diary_backup_${new Date().toLocaleDateString()}.json`;
+        a.download = `kawaii_diary_backup_${user.uid}_${new Date().toLocaleDateString()}.json`;
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
@@ -108,10 +133,11 @@ const Storage = {
     },
 
     /**
-     * Clear all data
+     * Clear all data của user hiện tại
      */
     clearAll() {
-        database.ref('/').remove();
+        const path = `users/${firebase.auth().currentUser.uid}`;
+        database.ref(path).remove();
         localStorage.clear();
     }
 };

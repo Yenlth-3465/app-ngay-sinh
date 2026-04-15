@@ -345,6 +345,21 @@ const UI = {
     },
 
     /**
+     * Update User Profile UI
+     */
+    updateUserProfile(user) {
+        if (!user) return;
+        
+        const avatar = document.getElementById('userAvatar');
+        const name = document.getElementById('userName');
+        const email = document.getElementById('userEmail');
+
+        if (avatar) avatar.src = user.photoURL || 'https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y';
+        if (name) name.textContent = user.displayName || 'Người dùng';
+        if (email) email.textContent = user.email || '';
+    },
+
+    /**
      * Confetti animation
      */
     celebrate() {

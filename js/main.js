@@ -4,10 +4,10 @@
  */
 
 document.addEventListener('DOMContentLoaded', () => {
-    // 1. Initialize App
-    App.init();
+    // 1. Initialize Auth first
+    Auth.init();
 
-    // 2. Initial Render
+    // 2. Initial Render (Dashboard tab will be shown after login)
     UI.showTab('dashboard');
 
     // 3. Check Daily Notifications
@@ -248,6 +248,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const activeTab = document.querySelector('.nav-tab.active').dataset.tab;
         if (activeTab === 'dashboard') UI.renderDashboard();
         else if (activeTab === 'events') UI.renderEventsList();
+    });
+
+    // Logout
+    document.getElementById('logoutBtn')?.addEventListener('click', () => {
+        if (confirm('Bạn có muốn đăng xuất không? 👋')) {
+            Auth.logout();
+        }
     });
 
     // Close modal when clicking outside

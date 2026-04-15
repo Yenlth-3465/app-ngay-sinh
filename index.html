@@ -12,6 +12,20 @@
     <link rel="stylesheet" href="css/animations.css">
 </head>
 <body>
+    <!-- Login Overlay -->
+    <div class="login-overlay" id="loginOverlay">
+        <div class="login-card kawaii-card">
+            <span class="login-emoji">🌸</span>
+            <h2>Chào mừng bạn!</h2>
+            <p>Vui lòng đăng nhập để bắt đầu lưu trữ những ngày đặc biệt của riêng bạn.</p>
+            <button class="login-btn google-btn" id="loginBtn">
+                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google icon">
+                Đăng nhập với Google
+            </button>
+            <p class="login-footer">Dữ liệu của bạn sẽ được bảo mật và riêng tư ✨</p>
+        </div>
+    </div>
+
     <!-- Floating decorations -->
     <div class="floating-decorations" id="floatingDecorations"></div>
 
@@ -343,6 +357,18 @@
                 <div class="settings-container">
                     <h2 class="form-title">⚙️ Cài đặt ⚙️</h2>
 
+                    <!-- User Profile -->
+                    <div class="setting-item kawaii-card" id="userProfileSection">
+                        <div class="user-info-card">
+                            <img src="" id="userAvatar" class="user-avatar" alt="Avatar">
+                            <div class="user-details">
+                                <h3 id="userName">Người dùng</h3>
+                                <p id="userEmail">email@example.com</p>
+                            </div>
+                        </div>
+                        <button class="kawaii-btn small danger" id="logoutBtn">🚪 Đăng xuất</button>
+                    </div>
+
                     <!-- Theme -->
                     <div class="setting-item kawaii-card">
                         <div class="setting-info">
@@ -471,7 +497,9 @@
     <!-- Firebase SDK (Compatibility version for easier integration) -->
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
+    <script src="js/auth.js"></script>
     <script src="js/app.js"></script>
     <script src="js/storage.js"></script>
     <script src="js/reminders.js"></script>
