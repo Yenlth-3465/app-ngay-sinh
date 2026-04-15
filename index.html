@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Ứng dụng quản lý ngày sinh, ngày lễ và sự kiện quan trọng với giao diện kawaii Nhật Bản">
+    <title>🌸 Nhật Ký Ngày Đặc Biệt 🌸</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=M+PLUS+Rounded+1c:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+</head>
+<body>
+    <!-- Floating decorations -->
+    <div class="floating-decorations" id="floatingDecorations"></div>
+
+    <!-- Main App Container -->
+    <div class="app-container">
+        <!-- Header -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🌸</span>
+                    <h1>Nhật Ký Ngày Đặc Biệt</h1>
+                    <span class="logo-icon">🌸</span>
+                </div>
+                <p class="tagline">✨ Ghi nhớ mọi khoảnh khắc đáng yêu ✨</p>
+            </div>
+        </header>
+
+        <!-- Navigation Tabs -->
+        <nav class="nav-tabs">
+            <button class="nav-tab active" data-tab="dashboard" id="tabDashboard">
+                <span class="tab-icon">🏠</span>
+                <span class="tab-text">Trang chủ</span>
+            </button>
+            <button class="nav-tab" data-tab="events" id="tabEvents">
+                <span class="tab-icon">📅</span>
+                <span class="tab-text">Sự kiện</span>
+            </button>
+            <button class="nav-tab" data-tab="add" id="tabAdd">
+                <span class="tab-icon">➕</span>
+                <span class="tab-text">Thêm mới</span>
+            </button>
+            <button class="nav-tab" data-tab="reminders" id="tabReminders">
+                <span class="tab-icon">🔔</span>
+                <span class="tab-text">Nhắc nhở</span>
+                <span class="reminder-badge" id="reminderBadge" style="display:none;">0</span>
+            </button>
+            <button class="nav-tab" data-tab="settings" id="tabSettings">
+                <span class="tab-icon">⚙️</span>
+                <span class="tab-text">Cài đặt</span>
+            </button>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- ============ DASHBOARD TAB ============ -->
+            <section class="tab-content active" id="dashboardContent">
+                <!-- Today's Info -->
+                <div class="today-card kawaii-card">
+                    <div class="today-date">
+                        <span class="today-icon">🗓️</span>
+                        <div>
+                            <h2 id="todayDate"></h2>
+                            <p id="todayLunar" class="lunar-date"></p>
+                        </div>
+                    </div>
+                    <div class="today-greeting" id="todayGreeting"></div>
+                </div>
+
+                <!-- Upcoming Events -->
+                <div class="section-header">
+                    <h2>🎀 Sự kiện sắp tới</h2>
+                </div>
+                <div class="upcoming-events" id="upcomingEvents">
+                    <!-- Dynamic content -->
+                </div>
+
+                <!-- Today's Events -->
+                <div class="section-header">
+                    <h2>🎉 Hôm nay</h2>
+                </div>
+                <div class="today-events" id="todayEvents">
+                    <!-- Dynamic content -->
+                </div>
+
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card kawaii-card pink">
+                        <span class="stat-icon">👨‍👩‍👧‍👦</span>
+                        <span class="stat-number" id="statFamily">0</span>
+                        <span class="stat-label">Gia đình</span>
+                    </div>
+                    <div class="stat-card kawaii-card blue">
+                        <span class="stat-icon">👫</span>
+                        <span class="stat-number" id="statFriends">0</span>
+                        <span class="stat-label">Bạn bè</span>
+                    </div>
+                    <div class="stat-card kawaii-card purple">
+                        <span class="stat-icon">🎌</span>
+                        <span class="stat-number" id="statHolidays">0</span>
+                        <span class="stat-label">Ngày lễ</span>
+                    </div>
+                    <div class="stat-card kawaii-card green">
+                        <span class="stat-icon">⭐</span>
+                        <span class="stat-number" id="statOthers">0</span>
+                        <span class="stat-label">Khác</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ============ EVENTS TAB ============ -->
+            <section class="tab-content" id="eventsContent">
+                <!-- Search & Filter -->
+                <div class="search-filter kawaii-card">
+                    <div class="search-box">
+                        <span class="search-icon">🔍</span>
+                        <input type="text" id="searchInput" placeholder="Tìm kiếm sự kiện..." class="kawaii-input">
+                    </div>
+                    <div class="filter-buttons">
+                        <button class="filter-btn active" data-filter="all" id="filterAll">Tất cả</button>
+                        <button class="filter-btn" data-filter="birthday" id="filterBirthday">🎂 Sinh nhật</button>
+                        <button class="filter-btn" data-filter="family" id="filterFamily">👨‍👩‍👧‍👦 Gia đình</button>
+                        <button class="filter-btn" data-filter="friend" id="filterFriend">👫 Bạn bè</button>
+                        <button class="filter-btn" data-filter="holiday" id="filterHoliday">🎌 Ngày lễ</button>
+                        <button class="filter-btn" data-filter="other" id="filterOther">⭐ Khác</button>
+                    </div>
+                </div>
+
+                <!-- Sort options -->
+                <div class="sort-bar">
+                    <label>Sắp xếp:</label>
+                    <select id="sortSelect" class="kawaii-select">
+                        <option value="upcoming">Sắp tới trước</option>
+                        <option value="name">Theo tên A-Z</option>
+                        <option value="category">Theo danh mục</option>
+                        <option value="month">Theo tháng</option>
+                    </select>
+                </div>
+
+                <!-- Events List -->
+                <div class="events-list" id="eventsList">
+                    <!-- Dynamic content -->
+                </div>
+            </section>
+
+            <!-- ============ ADD EVENT TAB ============ -->
+            <section class="tab-content" id="addContent">
+                <div class="form-container kawaii-card">
+                    <h2 class="form-title">🌟 Thêm sự kiện mới 🌟</h2>
+                    
+                    <form id="eventForm" autocomplete="off">
+                        <!-- Event Type -->
+                        <div class="form-group">
+                            <label class="form-label">Loại sự kiện</label>
+                            <div class="event-type-grid">
+                                <label class="type-option">
+                                    <input type="radio" name="eventType" value="birthday" checked>
+                                    <span class="type-card">
+                                        <span class="type-emoji">🎂</span>
+                                        <span>Sinh nhật</span>
+                                    </span>
+                                </label>
+                                <label class="type-option">
+                                    <input type="radio" name="eventType" value="holiday">
+                                    <span class="type-card">
+                                        <span class="type-emoji">🎌</span>
+                                        <span>Ngày lễ</span>
+                                    </span>
+                                </label>
+                                <label class="type-option">
+                                    <input type="radio" name="eventType" value="anniversary">
+                                    <span class="type-card">
+                                        <span class="type-emoji">💝</span>
+                                        <span>Kỷ niệm</span>
+                                    </span>
+                                </label>
+                                <label class="type-option">
+                                    <input type="radio" name="eventType" value="other">
+                                    <span class="type-card">
+                                        <span class="type-emoji">⭐</span>
+                                        <span>Khác</span>
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Person/Event Name -->
+                        <div class="form-group">
+                            <label class="form-label" for="eventName">
+                                <span class="label-icon">✏️</span> Tên
+                            </label>
+                            <input type="text" id="eventName" class="kawaii-input" placeholder="VD: Bé Hana, Mẹ, Tết Nguyên Đán..." required>
+                        </div>
+
+                        <!-- Category -->
+                        <div class="form-group" id="categoryGroup">
+                            <label class="form-label" for="eventCategory">
+                                <span class="label-icon">🏷️</span> Phân loại
+                            </label>
+                            <select id="eventCategory" class="kawaii-select">
+                                <option value="family">👨‍👩‍👧‍👦 Gia đình</option>
+                                <option value="friend">👫 Bạn bè</option>
+                                <option value="colleague">💼 Đồng nghiệp</option>
+                                <option value="other">⭐ Khác</option>
+                            </select>
+                        </div>
+
+                        <!-- Date -->
+                        <div class="form-group">
+                            <label class="form-label" for="eventDate">
+                                <span class="label-icon">📅</span> Ngày
+                            </label>
+                            <input type="date" id="eventDate" class="kawaii-input" required>
+                        </div>
+
+                        <!-- Year of birth (optional for birthdays) -->
+                        <div class="form-group" id="birthYearGroup">
+                            <label class="form-label" for="birthYear">
+                                <span class="label-icon">📆</span> Năm sinh (tùy chọn)
+                            </label>
+                            <input type="number" id="birthYear" class="kawaii-input" placeholder="VD: 1990" min="1900" max="2030">
+                            <small class="form-hint">Để tính tuổi tự động</small>
+                        </div>
+
+                        <!-- Recurring -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="label-icon">🔄</span> Lặp lại hàng năm
+                            </label>
+                            <label class="toggle-switch">
+                                <input type="checkbox" id="eventRecurring" checked>
+                                <span class="toggle-slider"></span>
+                                <span class="toggle-label">Có</span>
+                            </label>
+                        </div>
+
+                        <!-- Reminder -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="label-icon">🔔</span> Nhắc nhở trước
+                            </label>
+                            <div class="reminder-options">
+                                <label class="reminder-option">
+                                    <input type="checkbox" name="reminder" value="0" checked>
+                                    <span class="reminder-chip">Ngày đó</span>
+                                </label>
+                                <label class="reminder-option">
+                                    <input type="checkbox" name="reminder" value="1" checked>
+                                    <span class="reminder-chip">1 ngày</span>
+                                </label>
+                                <label class="reminder-option">
+                                    <input type="checkbox" name="reminder" value="2" checked>
+                                    <span class="reminder-chip">2 ngày</span>
+                                </label>
+                                <label class="reminder-option">
+                                    <input type="checkbox" name="reminder" value="3">
+                                    <span class="reminder-chip">3 ngày</span>
+                                </label>
+                                <label class="reminder-option">
+                                    <input type="checkbox" name="reminder" value="7">
+                                    <span class="reminder-chip">1 tuần</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Avatar/Emoji -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                <span class="label-icon">😊</span> Biểu tượng
+                            </label>
+                            <div class="emoji-picker" id="emojiPicker">
+                                <button type="button" class="emoji-btn selected" data-emoji="🎂">🎂</button>
+                                <button type="button" class="emoji-btn" data-emoji="👶">👶</button>
+                                <button type="button" class="emoji-btn" data-emoji="👧">👧</button>
+                                <button type="button" class="emoji-btn" data-emoji="👦">👦</button>
+                                <button type="button" class="emoji-btn" data-emoji="👩">👩</button>
+                                <button type="button" class="emoji-btn" data-emoji="👨">👨</button>
+                                <button type="button" class="emoji-btn" data-emoji="👵">👵</button>
+                                <button type="button" class="emoji-btn" data-emoji="👴">👴</button>
+                                <button type="button" class="emoji-btn" data-emoji="👫">👫</button>
+                                <button type="button" class="emoji-btn" data-emoji="💑">💑</button>
+                                <button type="button" class="emoji-btn" data-emoji="👨‍👩‍👧">👨‍👩‍👧</button>
+                                <button type="button" class="emoji-btn" data-emoji="🐱">🐱</button>
+                                <button type="button" class="emoji-btn" data-emoji="🐶">🐶</button>
+                                <button type="button" class="emoji-btn" data-emoji="🌸">🌸</button>
+                                <button type="button" class="emoji-btn" data-emoji="💝">💝</button>
+                                <button type="button" class="emoji-btn" data-emoji="🎌">🎌</button>
+                                <button type="button" class="emoji-btn" data-emoji="🎄">🎄</button>
+                                <button type="button" class="emoji-btn" data-emoji="🎃">🎃</button>
+                                <button type="button" class="emoji-btn" data-emoji="💍">💍</button>
+                                <button type="button" class="emoji-btn" data-emoji="🎓">🎓</button>
+                            </div>
+                        </div>
+
+                        <!-- Note -->
+                        <div class="form-group">
+                            <label class="form-label" for="eventNote">
+                                <span class="label-icon">📝</span> Ghi chú (tùy chọn)
+                            </label>
+                            <textarea id="eventNote" class="kawaii-input kawaii-textarea" placeholder="VD: Thích màu hồng, thích bánh dâu..." rows="3"></textarea>
+                        </div>
+
+                        <!-- Submit -->
+                        <button type="submit" class="submit-btn" id="submitBtn">
+                            <span class="btn-sparkle">✨</span>
+                            Lưu sự kiện
+                            <span class="btn-sparkle">✨</span>
+                        </button>
+                    </form>
+                </div>
+            </section>
+
+            <!-- ============ REMINDERS TAB ============ -->
+            <section class="tab-content" id="remindersContent">
+                <div class="section-header">
+                    <h2>🔔 Nhắc nhở</h2>
+                </div>
+                
+                <!-- Active Reminders -->
+                <div class="reminders-section">
+                    <h3 class="reminder-section-title">⚡ Hôm nay & Sắp tới</h3>
+                    <div id="activeReminders" class="reminders-list">
+                        <!-- Dynamic content -->
+                    </div>
+                </div>
+
+                <!-- Notification Permission -->
+                <div class="notification-card kawaii-card" id="notificationCard">
+                    <div class="notification-icon">🔔</div>
+                    <h3>Bật thông báo</h3>
+                    <p>Cho phép thông báo để không bỏ lỡ ngày quan trọng!</p>
+                    <button class="kawaii-btn" id="enableNotificationBtn">
+                        Bật thông báo 🔔
+                    </button>
+                </div>
+            </section>
+
+            <!-- ============ SETTINGS TAB ============ -->
+            <section class="tab-content" id="settingsContent">
+                <div class="settings-container">
+                    <h2 class="form-title">⚙️ Cài đặt ⚙️</h2>
+
+                    <!-- Theme -->
+                    <div class="setting-item kawaii-card">
+                        <div class="setting-info">
+                            <span class="setting-icon">🎨</span>
+                            <div>
+                                <h3>Giao diện</h3>
+                                <p>Chọn theme yêu thích</p>
+                            </div>
+                        </div>
+                        <div class="theme-options">
+                            <button class="theme-btn active" data-theme="sakura" id="themeSakura">🌸 Sakura</button>
+                            <button class="theme-btn" data-theme="ocean" id="themeOcean">🌊 Ocean</button>
+                            <button class="theme-btn" data-theme="lavender" id="themeLavender">💜 Lavender</button>
+                            <button class="theme-btn" data-theme="mint" id="themeMint">🍃 Mint</button>
+                        </div>
+                    </div>
+
+                    <!-- Default Reminder -->
+                    <div class="setting-item kawaii-card">
+                        <div class="setting-info">
+                            <span class="setting-icon">🔔</span>
+                            <div>
+                                <h3>Nhắc nhở mặc định</h3>
+                                <p>Nhắc trước bao nhiêu ngày</p>
+                            </div>
+                        </div>
+                        <select id="defaultReminder" class="kawaii-select">
+                            <option value="1">1 ngày</option>
+                            <option value="2" selected>2 ngày</option>
+                            <option value="3">3 ngày</option>
+                            <option value="7">1 tuần</option>
+                        </select>
+                    </div>
+
+                    <!-- Export/Import -->
+                    <div class="setting-item kawaii-card">
+                        <div class="setting-info">
+                            <span class="setting-icon">💾</span>
+                            <div>
+                                <h3>Dữ liệu</h3>
+                                <p>Sao lưu & khôi phục</p>
+                            </div>
+                        </div>
+                        <div class="data-buttons">
+                            <button class="kawaii-btn small" id="exportBtn">📤 Xuất dữ liệu</button>
+                            <button class="kawaii-btn small secondary" id="importBtn">📥 Nhập dữ liệu</button>
+                            <input type="file" id="importFile" accept=".json" style="display:none">
+                        </div>
+                    </div>
+
+                    <!-- Add Sample Data -->
+                    <div class="setting-item kawaii-card">
+                        <div class="setting-info">
+                            <span class="setting-icon">🎯</span>
+                            <div>
+                                <h3>Dữ liệu mẫu</h3>
+                                <p>Thêm dữ liệu mẫu để trải nghiệm</p>
+                            </div>
+                        </div>
+                        <button class="kawaii-btn small" id="sampleDataBtn">🌸 Thêm dữ liệu mẫu</button>
+                    </div>
+
+                    <!-- Clear All -->
+                    <div class="setting-item kawaii-card danger">
+                        <div class="setting-info">
+                            <span class="setting-icon">🗑️</span>
+                            <div>
+                                <h3>Xóa tất cả</h3>
+                                <p>Xóa toàn bộ dữ liệu</p>
+                            </div>
+                        </div>
+                        <button class="kawaii-btn small danger" id="clearAllBtn">Xóa hết</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Edit Modal -->
+    <div class="modal-overlay" id="editModal">
+        <div class="modal-content kawaii-card">
+            <button class="modal-close" id="modalClose">✕</button>
+            <h2 class="form-title" id="modalTitle">✏️ Chỉnh sửa sự kiện</h2>
+            <form id="editForm">
+                <input type="hidden" id="editEventId">
+                
+                <div class="form-group">
+                    <label class="form-label" for="editName">Tên</label>
+                    <input type="text" id="editName" class="kawaii-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="editDate">Ngày</label>
+                    <input type="date" id="editDate" class="kawaii-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="editCategory">Phân loại</label>
+                    <select id="editCategory" class="kawaii-select">
+                        <option value="family">👨‍👩‍👧‍👦 Gia đình</option>
+                        <option value="friend">👫 Bạn bè</option>
+                        <option value="colleague">💼 Đồng nghiệp</option>
+                        <option value="other">⭐ Khác</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="editNote">Ghi chú</label>
+                    <textarea id="editNote" class="kawaii-input kawaii-textarea" rows="3"></textarea>
+                </div>
+
+                <div class="modal-actions">
+                    <button type="button" class="kawaii-btn secondary" id="modalCancel">Hủy</button>
+                    <button type="submit" class="kawaii-btn">💾 Lưu</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Confetti Canvas -->
+    <canvas id="confettiCanvas"></canvas>
+
+    <script src="js/app.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/reminders.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,152 @@
+/* ============================================
+   🌸 KAWAII ANIMATIONS
+   ============================================ */
+
+/* Bounce */
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* Pulse */
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+}
+
+/* Fade In */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Wiggle */
+@keyframes wiggle {
+    0%, 100% { transform: rotate(0deg); }
+    25% { transform: rotate(3deg); }
+    75% { transform: rotate(-3deg); }
+}
+
+/* Heart Beat */
+@keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    15% { transform: scale(1.15); }
+    30% { transform: scale(1); }
+    45% { transform: scale(1.1); }
+    60% { transform: scale(1); }
+}
+
+/* Float */
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-12px) rotate(5deg); }
+}
+
+/* Scale In */
+@keyframes scaleIn {
+    from { transform: scale(0.8); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+
+/* Slide In Right */
+@keyframes slideInRight {
+    from { transform: translateX(30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Slide In Left */
+@keyframes slideInLeft {
+    from { transform: translateX(-30px); opacity: 0; }
+    to { transform: translateX(0); opacity: 1; }
+}
+
+/* Pop In */
+@keyframes popIn {
+    0% { transform: scale(0); opacity: 0; }
+    70% { transform: scale(1.1); }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* Stagger children animation */
+.event-card:nth-child(1) { animation: slideInRight 0.4s ease 0.0s both; }
+.event-card:nth-child(2) { animation: slideInRight 0.4s ease 0.05s both; }
+.event-card:nth-child(3) { animation: slideInRight 0.4s ease 0.1s both; }
+.event-card:nth-child(4) { animation: slideInRight 0.4s ease 0.15s both; }
+.event-card:nth-child(5) { animation: slideInRight 0.4s ease 0.2s both; }
+.event-card:nth-child(6) { animation: slideInRight 0.4s ease 0.25s both; }
+.event-card:nth-child(7) { animation: slideInRight 0.4s ease 0.3s both; }
+.event-card:nth-child(8) { animation: slideInRight 0.4s ease 0.35s both; }
+.event-card:nth-child(9) { animation: slideInRight 0.4s ease 0.4s both; }
+.event-card:nth-child(10) { animation: slideInRight 0.4s ease 0.45s both; }
+
+.stat-card:nth-child(1) { animation: popIn 0.5s ease 0.1s both; }
+.stat-card:nth-child(2) { animation: popIn 0.5s ease 0.2s both; }
+.stat-card:nth-child(3) { animation: popIn 0.5s ease 0.3s both; }
+.stat-card:nth-child(4) { animation: popIn 0.5s ease 0.4s both; }
+
+.reminder-card:nth-child(1) { animation: slideInLeft 0.4s ease 0.0s both; }
+.reminder-card:nth-child(2) { animation: slideInLeft 0.4s ease 0.1s both; }
+.reminder-card:nth-child(3) { animation: slideInLeft 0.4s ease 0.2s both; }
+.reminder-card:nth-child(4) { animation: slideInLeft 0.4s ease 0.3s both; }
+.reminder-card:nth-child(5) { animation: slideInLeft 0.4s ease 0.4s both; }
+
+/* Hover micro-interactions */
+.event-card:hover .event-avatar {
+    animation: wiggle 0.5s ease;
+}
+
+.stat-card:hover .stat-icon {
+    animation: bounce 0.6s ease;
+}
+
+.reminder-card:hover .reminder-emoji {
+    animation: heartbeat 1s ease;
+}
+
+/* Smooth transitions for interactive elements */
+.kawaii-input,
+.kawaii-select,
+.kawaii-btn,
+.filter-btn,
+.theme-btn,
+.emoji-btn,
+.type-card,
+.reminder-chip {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Active press effect */
+.kawaii-btn:active,
+.submit-btn:active,
+.filter-btn:active,
+.theme-btn:active {
+    transform: scale(0.97);
+}
+
+/* Loading shimmer effect */
+@keyframes loadingShimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+}
+
+.loading-shimmer {
+    background: linear-gradient(
+        90deg,
+        var(--card-bg) 25%,
+        rgba(255, 107, 157, 0.1) 50%,
+        var(--card-bg) 75%
+    );
+    background-size: 200% 100%;
+    animation: loadingShimmer 1.5s ease-in-out infinite;
+}
+
+/* Page transition */
+.page-transition {
+    animation: fadeSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Confetti burst */
+@keyframes confettiFall {
+    0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+}
