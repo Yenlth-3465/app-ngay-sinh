@@ -51,12 +51,6 @@ const UI = {
         if (tabId === 'events') this.renderEventsList();
         if (tabId === 'reminders') this.renderReminders();
         
-        // Initialize decorations if they don't exist
-        if (!this.decorationsInited) {
-            this.initDecorations();
-            this.decorationsInited = true;
-        }
-
         window.scrollTo(0, 0);
     },
 
@@ -380,49 +374,6 @@ const UI = {
         }
 
         animate();
-    },
-
-    /**
-     * Initialize floating decorations
-     */
-    initDecorations() {
-        const container = document.getElementById('floatingDecorations');
-        if (!container) return;
-
-        const emojis = ['🌸', '✨', '🎈', '🎉', '🌟', '💖', '🍀', '🎀'];
-        const count = 15;
-
-        for (let i = 0; i < count; i++) {
-            this.createDecoration(container, emojis);
-        }
-    },
-
-    /**
-     * Create a single floating decoration
-     */
-    createDecoration(container, emojis) {
-        const decoration = document.createElement('div');
-        decoration.className = 'floating-petal';
-        decoration.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-        
-        const resetDecoration = () => {
-            const left = Math.random() * 100;
-            const size = 0.8 + Math.random() * 1.5;
-            const duration = 10 + Math.random() * 20;
-            const delay = Math.random() * -20;
-            
-            decoration.style.left = `${left}%`;
-            decoration.style.fontSize = `${size}rem`;
-            decoration.style.animationDuration = `${duration}s`;
-            decoration.style.animationDelay = `${delay}s`;
-            decoration.style.opacity = (0.2 + Math.random() * 0.4).toString();
-        };
-
-        resetDecoration();
-        container.appendChild(decoration);
-
-        // Periodically refresh position to keep it dynamic
-        decoration.addEventListener('animationiteration', resetDecoration);
     }
 };
 
